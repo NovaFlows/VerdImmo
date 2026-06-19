@@ -1,8 +1,0 @@
-<svg width="52" height="40" viewBox="0 0 52 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- V en vert -->
-  <path d="M3 5L14 34L20 19L26 34L37 5" stroke="#16a34a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
-  <!-- I en noir avec empattements -->
-  <path d="M42 5H50" stroke="#111827" stroke-width="3" stroke-linecap="round"/>
-  <path d="M46 5V34" stroke="#111827" stroke-width="3" stroke-linecap="round"/>
-  <path d="M42 34H50" stroke="#111827" stroke-width="3" stroke-linecap="round"/>
-</svg>

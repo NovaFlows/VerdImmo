@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VerdImmo — Rentable ou pas ? Réponse en 30 secondes.</title>
-    <link rel="icon" type="image/svg+xml" href="logo.svg">
+    <link rel="icon" type="image/png" href="logo.png">
     <script defer src="/_vercel/insights/script.js"></script>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -713,10 +713,7 @@
 <!-- NAV -->
 <nav class="nav" id="nav">
     <a href="#" class="logo">
-        <svg width="36" height="28" viewBox="0 0 52 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M3 5L14 34L20 19L26 34L37 5" stroke="#16a34a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M42 5H50M46 5V34M42 34H50" stroke="#111827" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <img src="logo.png" alt="VerdImmo" height="36" style="width:auto;border-radius:6px;">
         <span class="logo-text">Verd<b>Immo</b></span>
     </a>
     <a href="#waitlist" class="nav-pill">Accès anticipé</a>
@@ -728,6 +725,7 @@
 
         <!-- Text -->
         <div class="hero-text">
+            <img src="logo.png" alt="VerdImmo" style="height:72px;width:auto;border-radius:12px;margin-bottom:20px;">
             <span class="hero-tag">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><circle cx="6" cy="6" r="4"/></svg>
                 Outil gratuit · Spécifique France
@@ -1229,7 +1227,7 @@
 
 <!-- ─── FOOTER ─── -->
 <footer class="foot">
-    <span class="foot-logo">Verd<b>Immo</b></span>
+    <img src="logo.png" alt="VerdImmo" style="height:32px;width:auto;border-radius:6px;">
     <span class="foot-copy">© 2026 — Fait avec ❤️ en France · Outil de simulation, pas de conseil financier.</span>
 </footer>
 
@@ -1356,6 +1354,8 @@
 
     // ── Shared state for share button ──
     let snap = null;
+    const shareLogoImg = new Image();
+    shareLogoImg.src = 'logo.png';
 
     // ── Gate — 1 simulation gratuite ──
     // La simulation est comptée comme "utilisée" après 800ms sans frappe
@@ -1526,10 +1526,15 @@
         ctx.fillStyle = '#1a6b3c'; ctx.fillRect(0, 0, W, 5);
 
         // Logo
-        ctx.font = '700 28px sans-serif';
-        ctx.fillStyle = 'rgba(255,255,255,.4)'; ctx.fillText('Verd', 60, 72);
-        const rw = ctx.measureText('Verd').width;
-        ctx.fillStyle = '#4ade80'; ctx.fillText('Immo', 60 + rw, 72);
+        if (shareLogoImg.complete && shareLogoImg.naturalWidth) {
+            const lh = 52, lw = Math.round(lh * (677 / 369));
+            ctx.drawImage(shareLogoImg, 60, 36, lw, lh);
+        } else {
+            ctx.font = '700 28px sans-serif';
+            ctx.fillStyle = 'rgba(255,255,255,.4)'; ctx.fillText('Verd', 60, 72);
+            const rw = ctx.measureText('Verd').width;
+            ctx.fillStyle = '#4ade80'; ctx.fillText('Immo', 60 + rw, 72);
+        }
 
         // Verdict background
         const vc = txt === 'RENTABLE'
