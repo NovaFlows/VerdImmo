@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VerdImmo — Rentable ou pas ? Réponse en 30 secondes.</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" href="logo.png">
     <script defer src="/_vercel/insights/script.js"></script>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1527,8 +1527,10 @@
 
         // Logo
         if (shareLogoImg.complete && shareLogoImg.naturalWidth) {
-            const lh = 52, lw = Math.round(lh * (677 / 369));
-            ctx.drawImage(shareLogoImg, 60, 36, lw, lh);
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            const lh = 80, lw = Math.round(lh * (shareLogoImg.naturalWidth / shareLogoImg.naturalHeight));
+            ctx.drawImage(shareLogoImg, 60, 30, lw, lh);
         } else {
             ctx.font = '700 28px sans-serif';
             ctx.fillStyle = 'rgba(255,255,255,.4)'; ctx.fillText('Verd', 60, 72);
