@@ -253,7 +253,7 @@
         .carousel-wrap { margin-top: 52px; max-width: 600px; margin-left: auto; margin-right: auto; }
         .carousel { overflow: hidden; border-radius: var(--r); }
         .car-track { display: flex; transition: transform .45s cubic-bezier(.4,0,.2,1); will-change: transform; }
-        .car-track .ex-card { min-width: 100%; flex-shrink: 0; }
+        .car-track .ex-card { flex-shrink: 0; } /* largeur fixée en JS */
 
         .car-nav {
             display: flex; align-items: center; justify-content: center;
@@ -1277,9 +1277,19 @@
     let carTimer = null;
     const carCountersDone = new Set();
 
+    function carSlideW() { return document.querySelector('.carousel').offsetWidth; }
+
+    function carSetWidths() {
+        const w = carSlideW();
+        carCards.forEach(c => c.style.width = w + 'px');
+        carTrack.style.transition = 'none';
+        carTrack.style.transform = `translateX(-${carIdx * w}px)`;
+        requestAnimationFrame(() => { carTrack.style.transition = ''; });
+    }
+
     function carGoTo(i) {
         carIdx = ((i % CAR_N) + CAR_N) % CAR_N;
-        carTrack.style.transform = `translateX(-${carIdx * 100}%)`;
+        carTrack.style.transform = `translateX(-${carIdx * carSlideW()}px)`;
         carDotEls.forEach((d, j) => d.classList.toggle('active', j === carIdx));
         if (!carCountersDone.has(carIdx)) {
             carCountersDone.add(carIdx);
@@ -1291,6 +1301,8 @@
     }
     function carPlay()  { carTimer = setInterval(() => carGoTo(carIdx + 1), 4000); }
     function carPause() { clearInterval(carTimer); }
+
+    window.addEventListener('resize', carSetWidths);
 
     document.getElementById('car-prev').addEventListener('click', () => { carPause(); carGoTo(carIdx - 1); carPlay(); });
     document.getElementById('car-next').addEventListener('click', () => { carPause(); carGoTo(carIdx + 1); carPlay(); });
@@ -1305,6 +1317,7 @@
     // Démarre quand la section entre dans le viewport
     new IntersectionObserver((entries, obs) => {
         if (!entries[0].isIntersecting) return;
+        carSetWidths();
         carGoTo(0); carPlay();
         obs.disconnect();
     }, { threshold: 0.3 }).observe(document.querySelector('.carousel-wrap'));
