@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VerdImmo — Rentable ou pas ? Réponse en 30 secondes.</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --accent:       #1a6b3c;
+            --accent-lt:    #e8f5ee;
+            --accent-dk:    #145530;
+            --black:        #0c0c0c;
+            --white:        #ffffff;
+            --g50:          #f8f9fa;
+            --g100:         #f1f3f5;
+            --g200:         #e9ecef;
+            --g400:         #adb5bd;
+            --g500:         #868e96;
+            --g700:         #495057;
+            --g900:         #212529;
+            --green:        #1a6b3c;
+            --green-bg:     #e8f5ee;
+            --green-bd:     #a7d9bb;
+            --orange:       #92400e;
+            --orange-bg:    #fef3c7;
+            --orange-bd:    #f59e0b;
+            --red:          #991b1b;
+            --red-bg:       #fee2e2;
+            --red-bd:       #f87171;
+            --r:            14px;
+            --r-sm:         8px;
+            --sh:           0 4px 20px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.05);
+            --sh-lg:        0 16px 48px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            color: var(--black); background: var(--white);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ─── NAV ─── */
+        .nav {
+            position: fixed; inset: 0 0 auto;
+            z-index: 100; height: 60px; padding: 0 28px;
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(255,255,255,0.88);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--g100);
+            transition: box-shadow .25s;
+        }
+        .nav.up { box-shadow: var(--sh); }
+
+        .logo { font-size: 17px; font-weight: 800; letter-spacing: -.5px; text-decoration: none; color: var(--black); }
+        .logo b { color: var(--accent); font-weight: 900; }
+
+        .nav-pill {
+            height: 34px; padding: 0 16px;
+            background: var(--black); color: var(--white);
+            border: none; border-radius: 100px; font-size: 13px; font-weight: 700;
+            cursor: pointer; text-decoration: none; display: inline-flex; align-items: center;
+            transition: opacity .15s, transform .15s;
+        }
+        .nav-pill:hover { opacity: .82; transform: translateY(-1px); }
+
+        /* ─── HERO ─── */
+        .hero {
+            min-height: 100vh;
+            padding: 80px 40px 60px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: var(--white);
+        }
+
+        .hero-inner {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 72px; max-width: 1100px; width: 100%; align-items: center;
+        }
+
+        .hero-text { display: flex; flex-direction: column; align-items: flex-start; }
+
+        .hero-tag {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--accent-lt); color: var(--accent);
+            padding: 5px 14px; border-radius: 100px;
+            font-size: 12px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase;
+            margin-bottom: 28px;
+            opacity: 0; animation: up .5s .1s ease both;
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 5vw, 68px);
+            font-weight: 900; line-height: 1.04; letter-spacing: -3px;
+            margin-bottom: 18px;
+            opacity: 0; animation: up .5s .2s ease both;
+        }
+
+        .hero-sub {
+            font-size: clamp(16px, 2vw, 19px);
+            color: var(--g500); font-weight: 500;
+            margin-bottom: 40px;
+            opacity: 0; animation: up .5s .3s ease both;
+        }
+
+        .hero-btn {
+            height: 54px; padding: 0 36px;
+            background: var(--accent); color: var(--white);
+            border: none; border-radius: 100px;
+            font-size: 17px; font-weight: 800; letter-spacing: -.3px;
+            cursor: pointer; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 10px;
+            box-shadow: 0 6px 28px rgba(26,107,60,.38);
+            transition: background .2s, transform .15s, box-shadow .2s;
+            opacity: 0; animation: up .5s .4s ease both;
+        }
+        .hero-btn:hover {
+            background: var(--accent-dk); transform: translateY(-2px);
+            box-shadow: 0 10px 36px rgba(26,107,60,.44);
+        }
+
+        /* ── Mock result card ── */
+        .hero-visual {
+            opacity: 0; animation: up .6s .35s ease both;
+        }
+
+        .mock-label {
+            font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+            color: var(--g400); margin-bottom: 12px; padding-left: 2px;
+        }
+
+        .mock-card {
+            background: var(--white); border-radius: var(--r);
+            border: 2px solid var(--g200);
+            box-shadow: 0 24px 64px rgba(0,0,0,0.13), 0 4px 16px rgba(0,0,0,0.07);
+            overflow: hidden;
+            transform: perspective(1200px) rotateY(-4deg) rotateX(2deg);
+            transition: transform .4s ease;
+        }
+        .mock-card:hover {
+            transform: perspective(1200px) rotateY(-1deg) rotateX(0deg);
+        }
+
+        .mock-verdict {
+            padding: 24px 24px 18px;
+            background: var(--green-bg); border-bottom: 2px solid var(--green-bd);
+        }
+        .mock-vlabel {
+            font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+            opacity: .5; margin-bottom: 8px;
+        }
+        .mock-vmain { display: flex; align-items: center; gap: 10px; }
+        .mock-ico   { font-size: 30px; line-height: 1; }
+        .mock-vtxt  { font-size: 42px; font-weight: 900; letter-spacing: -2.5px; line-height: 1; color: var(--green); }
+        .mock-vsub  { font-size: 12px; color: var(--green); opacity: .65; margin-top: 6px; }
+
+        .mock-metrics {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1px; background: var(--g200);
+            border-bottom: 2px solid var(--g200);
+        }
+        .mock-met { background: var(--white); padding: 16px 12px; text-align: center; }
+        .mock-mval { font-size: 20px; font-weight: 900; letter-spacing: -.5px; margin-bottom: 3px; }
+        .mock-mval.pos { color: var(--green); }
+        .mock-mkey { font-size: 10px; font-weight: 800; color: var(--g400); text-transform: uppercase; letter-spacing: .5px; }
+
+        .mock-footer {
+            padding: 14px 20px; display: flex; gap: 24px;
+        }
+        .mock-field { font-size: 13px; }
+        .mock-fk { color: var(--g500); margin-right: 6px; }
+        .mock-fv { font-weight: 700; }
+
+        .hero-scroll {
+            margin-top: 56px; color: var(--g400);
+            opacity: 0; animation: up .5s .65s ease both;
+        }
+        .hero-scroll svg { animation: bob 1.8s 1.2s ease-in-out infinite; }
+
+        /* ── Photo frame (hero) ── */
+        .photo-frame {
+            position: relative; border-radius: 20px; overflow: hidden;
+            box-shadow: 0 32px 80px rgba(0,0,0,0.22), 0 8px 24px rgba(0,0,0,0.1);
+            aspect-ratio: 4/5; max-height: 580px;
+        }
+        .photo-frame-img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+            transition: transform .6s ease;
+        }
+        .photo-frame:hover .photo-frame-img { transform: scale(1.03); }
+        .photo-frame-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.15) 45%, transparent 100%);
+        }
+        .photo-frame-card {
+            position: absolute; bottom: 16px; left: 14px; right: 14px;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-radius: 12px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.7);
+        }
+
+        /* ── Examples section ── */
+        .ex-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 24px; margin-top: 52px;
+        }
+        .ex-card {
+            border-radius: var(--r); overflow: hidden;
+            border: 2px solid var(--g100);
+            box-shadow: var(--sh);
+            transition: transform .22s ease, box-shadow .22s ease;
+        }
+        .ex-card:hover { transform: translateY(-6px); box-shadow: var(--sh-lg); }
+
+        .ex-photo-wrap { position: relative; aspect-ratio: 16/10; overflow: hidden; }
+        .ex-photo { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s ease; }
+        .ex-card:hover .ex-photo { transform: scale(1.04); }
+        .ex-photo-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%);
+        }
+        .ex-badge {
+            position: absolute; bottom: 14px; left: 14px;
+            display: flex; align-items: center; gap: 7px;
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(8px);
+            padding: 7px 14px; border-radius: 100px;
+            font-size: 13px; font-weight: 800; letter-spacing: -.2px;
+        }
+        .ex-badge-dot {
+            width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+        }
+        .ex-badge-dot.g { background: var(--green); }
+        .ex-badge-dot.r { background: var(--red); }
+        .ex-badge.g { color: var(--green); }
+        .ex-badge.r { color: var(--red); }
+
+        .ex-body { padding: 22px 22px 20px; }
+        .ex-city { font-size: 17px; font-weight: 800; letter-spacing: -.4px; margin-bottom: 2px; }
+        .ex-meta { font-size: 13px; color: var(--g500); margin-bottom: 16px; }
+        .ex-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .ex-stat-v { font-size: 20px; font-weight: 900; letter-spacing: -.5px; margin-bottom: 2px; }
+        .ex-stat-v.pos { color: var(--green); }
+        .ex-stat-v.neg { color: var(--red); }
+        .ex-stat-k { font-size: 11px; font-weight: 700; color: var(--g400); text-transform: uppercase; letter-spacing: .4px; }
+
+        /* hero responsive */
+        @media (max-width: 860px) {
+            .hero { padding: 80px 24px 48px; }
+            .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+            .hero-text { align-items: center; text-align: center; }
+            .hero-visual { max-width: 440px; width: 100%; margin: 0 auto; }
+            .photo-frame { aspect-ratio: 3/2; max-height: none; }
+            .ex-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ─── SECTION BASE ─── */
+        .sec { padding: 96px 24px; }
+        .sec-lt { background: var(--g50); border-top: 1px solid var(--g100); border-bottom: 1px solid var(--g100); }
+        .sec-dk { background: var(--black); color: var(--white); }
+
+        .wrap    { max-width: 1040px; margin: 0 auto; }
+        .wrap-sm { max-width: 660px;  margin: 0 auto; }
+
+        .eyebrow {
+            font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+            color: var(--accent); margin-bottom: 14px;
+        }
+        .eyebrow-lt { color: rgba(255,255,255,.35); }
+
+        .sec-h2 {
+            font-size: clamp(30px, 4.5vw, 52px);
+            font-weight: 900; letter-spacing: -2px; line-height: 1.08;
+            margin-bottom: 14px;
+        }
+        .sec-p { font-size: 18px; color: var(--g500); max-width: 520px; }
+        .sec-p-lt { color: rgba(255,255,255,.5); }
+
+        /* ─── CALCULATOR LAYOUT ─── */
+        .calc-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 44px; margin-top: 52px; align-items: start;
+        }
+
+        /* inputs */
+        .field { margin-bottom: 20px; }
+        .field:last-child { margin-bottom: 0; }
+
+        .field label {
+            display: block; font-size: 14px; font-weight: 700;
+            color: var(--g700); margin-bottom: 8px;
+        }
+
+        .iw { position: relative; }
+        .iw-pre {
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            font-size: 15px; font-weight: 700; color: var(--g400); pointer-events: none; z-index: 1;
+        }
+
+        .field input,
+        .field select {
+            width: 100%; height: 54px;
+            padding: 0 14px 0 32px;
+            border: 2px solid var(--g200); border-radius: var(--r-sm);
+            font-size: 17px; font-weight: 500; color: var(--black); background: var(--white);
+            outline: none;
+            transition: border-color .18s, box-shadow .18s;
+            -webkit-appearance: none; appearance: none;
+        }
+        .field select { padding-left: 14px; cursor: pointer; }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(26,107,60,.13);
+        }
+        .field input:focus-visible,
+        .field select:focus-visible {
+            outline: 3px solid var(--accent); outline-offset: 2px;
+        }
+
+        .field-hint { font-size: 12px; color: var(--g400); margin-top: 6px; }
+
+        .notary-tip {
+            margin-top: 24px; padding: 14px 18px;
+            background: var(--accent-lt); border-radius: var(--r-sm);
+            border-left: 3px solid var(--accent);
+        }
+        .notary-tip p { font-size: 13px; color: var(--accent); font-weight: 700; line-height: 1.5; }
+        .notary-tip span { font-weight: 500; }
+
+        /* ─── RESULTS CARD ─── */
+        .card-wrap { position: sticky; top: 72px; }
+
+        .rcard {
+            background: var(--white); border-radius: var(--r);
+            border: 2px solid var(--g200);
+            box-shadow: var(--sh-lg); overflow: hidden;
+        }
+
+        /* empty */
+        .state-empty { padding: 56px 32px; text-align: center; color: var(--g400); }
+        .state-empty-ico { display: block; margin: 0 auto 16px; color: var(--g400); }
+        .state-empty-t { font-size: 16px; font-weight: 800; color: var(--g500); margin-bottom: 4px; }
+        .state-empty-s { font-size: 14px; }
+
+        /* ── VERDICT ── BIG, brutal ── */
+        .vblock {
+            padding: 28px 28px 20px;
+            border-bottom: 2px solid;
+            transition: background .25s, border-color .25s;
+        }
+        .vblock.g { background: var(--green-bg);  border-color: var(--green-bd); }
+        .vblock.o { background: var(--orange-bg); border-color: var(--orange-bd); }
+        .vblock.r { background: var(--red-bg);    border-color: var(--red-bd); }
+
+        .vlabel {
+            font-size: 11px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+            opacity: .55; margin-bottom: 8px;
+        }
+        .vmain { display: flex; align-items: center; gap: 12px; }
+        .vico   { font-size: 36px; line-height: 1; flex-shrink: 0; }
+        .vtxt   {
+            font-size: 52px; font-weight: 900; letter-spacing: -3px; line-height: 1;
+            transition: color .25s;
+        }
+        .vblock.g .vtxt { color: var(--green); }
+        .vblock.o .vtxt { color: var(--orange); }
+        .vblock.r .vtxt { color: var(--red); }
+
+        .vsub { font-size: 13px; opacity: .65; margin-top: 8px; line-height: 1.4; }
+
+        /* metrics row */
+        .metrics {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1px; background: var(--g200);
+            border-bottom: 2px solid var(--g200);
+        }
+        .met { background: var(--white); padding: 18px 12px; text-align: center; }
+        .met-v {
+            font-size: 22px; font-weight: 900; letter-spacing: -0.5px; line-height: 1;
+            margin-bottom: 4px;
+        }
+        .met-v.pos { color: var(--green); }
+        .met-v.neg { color: var(--red); }
+        .met-k { font-size: 10px; font-weight: 800; color: var(--g400); text-transform: uppercase; letter-spacing: .5px; }
+
+        /* share — visible without scrolling, right after metrics */
+        .share-zone { padding: 16px 20px; border-bottom: 1px solid var(--g100); }
+        .share-btn {
+            width: 100%; height: 46px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: var(--black); color: var(--white);
+            border: none; border-radius: var(--r-sm);
+            font-size: 14px; font-weight: 800; cursor: pointer;
+            transition: background .2s, transform .15s;
+        }
+        .share-btn:hover { background: #2a2a2a; transform: translateY(-1px); }
+        .share-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+        .share-btn.ok { background: var(--accent); }
+
+        /* detail breakdown */
+        .breakdown { padding: 16px 20px; }
+        .brow {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 7px 0; font-size: 13px;
+            border-bottom: 1px solid var(--g100);
+        }
+        .brow:last-child { border-bottom: none; }
+        .brow-k { color: var(--g500); }
+        .brow-v { font-weight: 700; }
+
+        /* ─── WHY CARDS ─── */
+        .why-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 20px; margin-top: 52px;
+        }
+        .why-card {
+            padding: 32px; border-radius: var(--r);
+            border: 2px solid var(--g100);
+            transition: border-color .2s, box-shadow .2s, transform .2s;
+        }
+        .why-card:hover { border-color: var(--g200); box-shadow: var(--sh); transform: translateY(-4px); }
+        .why-ico {
+            width: 44px; height: 44px;
+            background: var(--accent-lt); border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 20px; color: var(--accent); flex-shrink: 0;
+        }
+        .why-t    { font-size: 19px; font-weight: 800; letter-spacing: -.4px; margin-bottom: 8px; }
+        .why-desc { font-size: 14px; color: var(--g500); line-height: 1.75; }
+
+        /* ─── WAITLIST ─── */
+        #waitlist .sec-h2 { color: var(--white); }
+
+        .wl-form { display: flex; gap: 10px; margin-top: 36px; max-width: 480px; }
+        .wl-inp {
+            flex: 1; height: 54px; padding: 0 20px;
+            border: 2px solid rgba(255,255,255,.1); border-radius: 100px;
+            background: rgba(255,255,255,.07); color: var(--white); font-size: 15px; outline: none;
+            transition: border-color .2s, background .2s;
+        }
+        .wl-inp::placeholder { color: rgba(255,255,255,.3); }
+        .wl-inp:focus { border-color: rgba(255,255,255,.3); background: rgba(255,255,255,.1); }
+        .wl-inp:focus-visible { outline: 3px solid rgba(255,255,255,.5); outline-offset: 2px; }
+
+        .wl-btn {
+            height: 54px; padding: 0 28px;
+            background: var(--white); color: var(--black);
+            border: none; border-radius: 100px; font-size: 15px; font-weight: 800;
+            cursor: pointer; white-space: nowrap;
+            transition: transform .15s, opacity .15s;
+        }
+        .wl-btn:hover { transform: translateY(-1px); opacity: .9; }
+        .wl-btn:focus-visible { outline: 3px solid rgba(255,255,255,.6); outline-offset: 2px; }
+
+        .wl-ok {
+            display: none; align-items: center; gap: 12px;
+            margin-top: 24px; max-width: 480px;
+            padding: 18px 22px; border-radius: var(--r-sm);
+            background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+            font-size: 15px; font-weight: 600; color: rgba(255,255,255,.85); line-height: 1.5;
+        }
+
+        #waitlist { padding: 140px 40px; text-align: center; }
+        #waitlist .sec-h2 {
+            font-size: clamp(40px, 6vw, 76px);
+            max-width: 760px; margin: 0 auto 20px;
+        }
+        #waitlist .sec-p {
+            font-size: 19px; max-width: 500px;
+            margin: 0 auto 0; color: rgba(255,255,255,.5);
+        }
+
+        .wl-proof {
+            display: inline-flex; align-items: center; gap: 12px;
+            margin-bottom: 28px;
+        }
+        .wl-avatars { display: flex; }
+        .wl-av {
+            width: 32px; height: 32px; border-radius: 50%;
+            border: 2px solid var(--black);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 800; color: var(--white);
+            margin-left: -8px;
+        }
+        .wl-avatars .wl-av:first-child { margin-left: 0; }
+        .wl-proof-txt { font-size: 14px; color: rgba(255,255,255,.45); font-weight: 600; }
+
+        .wl-form {
+            display: flex; gap: 10px; margin: 40px auto 0;
+            max-width: 520px; justify-content: center;
+        }
+        .wl-inp {
+            flex: 1; height: 56px; padding: 0 22px;
+            border: 2px solid rgba(255,255,255,.1); border-radius: 100px;
+            background: rgba(255,255,255,.07); color: var(--white); font-size: 16px; outline: none;
+            transition: border-color .2s, background .2s;
+        }
+        .wl-inp::placeholder { color: rgba(255,255,255,.3); }
+        .wl-inp:focus { border-color: rgba(255,255,255,.3); background: rgba(255,255,255,.1); }
+        .wl-inp:focus-visible { outline: 3px solid rgba(255,255,255,.5); outline-offset: 2px; }
+
+        .wl-btn {
+            height: 56px; padding: 0 32px;
+            background: var(--white); color: var(--black);
+            border: none; border-radius: 100px; font-size: 16px; font-weight: 800;
+            cursor: pointer; white-space: nowrap;
+            transition: transform .15s, opacity .15s;
+        }
+        .wl-btn:hover { transform: translateY(-1px); opacity: .9; }
+        .wl-btn:focus-visible { outline: 3px solid rgba(255,255,255,.6); outline-offset: 2px; }
+
+        .wl-features {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 16px; max-width: 560px; margin: 40px auto 0; text-align: left;
+        }
+        .wl-feat {
+            display: flex; align-items: flex-start; gap: 14px;
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 12px; padding: 18px 16px;
+        }
+        .wl-feat-ico {
+            width: 34px; height: 34px; border-radius: 8px;
+            background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.08);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; color: rgba(255,255,255,.7);
+        }
+        .wl-feat-t { font-size: 13px; font-weight: 800; color: rgba(255,255,255,.85); margin-bottom: 4px; }
+        .wl-feat-d { font-size: 12px; color: rgba(255,255,255,.35); line-height: 1.6; }
+
+        @media (max-width: 540px) {
+            .wl-features { grid-template-columns: 1fr; }
+        }
+
+        .wl-perks { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 32px; justify-content: center; }
+        .wl-perk  { font-size: 13px; color: rgba(255,255,255,.3); }
+
+        /* ─── FOOTER ─── */
+        .foot {
+            background: var(--black); border-top: 1px solid rgba(255,255,255,.05);
+            padding: 24px 28px;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 12px;
+        }
+        .foot-logo { font-size: 15px; font-weight: 800; color: var(--white); }
+        .foot-logo b { color: var(--accent); }
+        .foot-copy { font-size: 13px; color: rgba(255,255,255,.28); }
+
+        /* ─── SCROLL REVEAL ─── */
+        .fade { opacity: 0; transform: translateY(22px); transition: opacity .55s ease, transform .55s ease; }
+        .fade.in { opacity: 1; transform: none; }
+
+        /* ─── KEYFRAMES ─── */
+        @keyframes up {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: none; }
+        }
+        @keyframes bob {
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(7px); }
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 860px) {
+            .nav { padding: 0 18px; }
+            .calc-grid { grid-template-columns: 1fr; gap: 28px; }
+            .card-wrap { position: static; }
+            .why-grid { grid-template-columns: 1fr; gap: 14px; }
+            .wl-form { flex-direction: column; }
+            .wl-btn { border-radius: var(--r-sm); }
+            .foot { flex-direction: column; gap: 8px; }
+            .vtxt { font-size: 42px; letter-spacing: -2px; }
+        }
+        @media (max-width: 480px) {
+            .hero h1 { letter-spacing: -2px; }
+            .sec { padding: 72px 18px; }
+            .vtxt { font-size: 34px; }
+            .mock-vtxt { font-size: 34px; }
+        }
+
+        /* ─── GATE OVERLAY ─── */
+        .gate {
+            display: none; position: absolute; inset: 0; z-index: 20;
+            background: rgba(8,8,8,0.88);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            border-radius: var(--r);
+            flex-direction: column; align-items: center; justify-content: center;
+            padding: 32px; text-align: center;
+        }
+        .gate.show { display: flex; }
+
+        .rcard.gated #st-filled { filter: blur(4px) brightness(.5); pointer-events: none; }
+
+        .gate-ico {
+            width: 52px; height: 52px; border-radius: 50%;
+            background: rgba(255,255,255,.08);
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,.6); margin: 0 auto 20px;
+        }
+        .gate-title { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 10px; letter-spacing: -.4px; }
+        .gate-sub   { font-size: 14px; color: rgba(255,255,255,.45); line-height: 1.6; margin-bottom: 24px; }
+
+        .gate-form  { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+        .gate-inp {
+            height: 48px; padding: 0 16px; border-radius: 10px;
+            border: 1.5px solid rgba(255,255,255,.12);
+            background: rgba(255,255,255,.07); color: #fff; font-size: 15px; outline: none;
+            transition: border-color .2s;
+        }
+        .gate-inp::placeholder { color: rgba(255,255,255,.3); }
+        .gate-inp:focus { border-color: var(--accent); }
+        .gate-submit {
+            height: 48px; border-radius: 10px; border: none;
+            background: var(--accent); color: #fff;
+            font-size: 15px; font-weight: 800; cursor: pointer;
+            transition: background .2s, transform .15s;
+        }
+        .gate-submit:hover { background: var(--accent-dk); transform: translateY(-1px); }
+
+        /* ─── SHARE MODAL ─── */
+        .smodal {
+            display: none; position: fixed; inset: 0; z-index: 300;
+            background: rgba(0,0,0,0.82);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            align-items: center; justify-content: center; padding: 20px;
+        }
+        .smodal.open { display: flex; }
+
+        .smodal-box {
+            background: #111; border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.7);
+            padding: 24px; width: 100%; max-width: 420px;
+            display: flex; flex-direction: column; gap: 16px;
+            animation: up .3s ease both;
+        }
+
+        .smodal-head {
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .smodal-title { font-size: 16px; font-weight: 800; color: var(--white); }
+        .smodal-close {
+            width: 30px; height: 30px; border-radius: 50%;
+            background: rgba(255,255,255,0.08); border: none;
+            color: rgba(255,255,255,0.5); font-size: 16px; line-height: 1;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: background .15s;
+        }
+        .smodal-close:hover { background: rgba(255,255,255,0.16); color: var(--white); }
+
+        #share-canvas {
+            width: 100%; border-radius: 12px; display: block;
+            image-rendering: -webkit-optimize-contrast;
+        }
+
+        .smodal-hint {
+            font-size: 12px; color: rgba(255,255,255,.3);
+            text-align: center; margin-top: -4px;
+        }
+
+        .smodal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .smodal-btn {
+            height: 46px; border-radius: 10px; border: none;
+            font-size: 14px; font-weight: 800; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: opacity .15s, transform .15s;
+        }
+        .smodal-btn:hover { opacity: .85; transform: translateY(-1px); }
+        .smodal-btn.dl   { background: var(--white); color: var(--black); }
+        .smodal-btn.native { background: rgba(255,255,255,.1); color: var(--white); }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+    <a href="#" class="logo">Verd<b>Immo</b></a>
+    <a href="#waitlist" class="nav-pill">Accès anticipé</a>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+    <div class="hero-inner">
+
+        <!-- Text -->
+        <div class="hero-text">
+            <span class="hero-tag">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><circle cx="6" cy="6" r="4"/></svg>
+                Outil gratuit · Spécifique France
+            </span>
+            <h1>Votre bien est-il vraiment rentable ?</h1>
+            <p class="hero-sub">3 chiffres. 30 secondes. Un verdict clair.</p>
+            <a href="#calculator" class="hero-btn">
+                Calculer maintenant
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                    <path d="M10 4v12M5 11l5 5 5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+        </div>
+
+        <!-- Hero photo + floating card -->
+        <div class="hero-visual" aria-hidden="true">
+            <div class="photo-frame">
+                <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&w=680&q=82"
+                     alt="" class="photo-frame-img" loading="eager" fetchpriority="high">
+                <div class="photo-frame-overlay"></div>
+                <div class="photo-frame-card">
+                    <div class="mock-verdict">
+                        <p class="mock-vlabel">Verdict · Lyon</p>
+                        <div class="mock-vmain">
+                            <span class="mock-ico">🟢</span>
+                            <span class="mock-vtxt">RENTABLE</span>
+                        </div>
+                        <p class="mock-vsub">Rendement brut 7,24 % — bien au-dessus du seuil de 6 %</p>
+                    </div>
+                    <div class="mock-metrics">
+                        <div class="mock-met">
+                            <div class="mock-mval">7,24 %</div>
+                            <div class="mock-mkey">Rdt. brut</div>
+                        </div>
+                        <div class="mock-met">
+                            <div class="mock-mval">5,43 %</div>
+                            <div class="mock-mkey">Rdt. net</div>
+                        </div>
+                        <div class="mock-met">
+                            <div class="mock-mval pos">+183 €</div>
+                            <div class="mock-mkey">Cashflow/mois</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="hero-scroll" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M11 5v12M5.5 12.5l5.5 5 5.5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+    </div>
+</section>
+
+<!-- ─── CALCULATOR ─── -->
+<section class="sec sec-lt" id="calculator">
+    <div class="wrap">
+        <p class="eyebrow fade">Calculateur</p>
+        <h2 class="sec-h2 fade">3 champs. Résultat immédiat.</h2>
+        <p class="sec-p fade">Tapez les chiffres — le verdict s'affiche en direct, pas besoin de valider.</p>
+
+        <div class="calc-grid">
+
+            <!-- INPUTS -->
+            <div class="fade">
+                <div class="field">
+                    <label for="price">Prix du bien</label>
+                    <div class="iw">
+                        <span class="iw-pre" aria-hidden="true">€</span>
+                        <input type="number" id="price" placeholder="200 000" min="0" step="1000"
+                               inputmode="numeric" autocomplete="off"
+                               aria-label="Prix du bien en euros">
+                    </div>
+                    <p class="field-hint">Prix d'achat hors frais de notaire</p>
+                </div>
+
+                <div class="field">
+                    <label for="rent">Loyer mensuel estimé</label>
+                    <div class="iw">
+                        <span class="iw-pre" aria-hidden="true">€</span>
+                        <input type="number" id="rent" placeholder="800" min="0" step="10"
+                               inputmode="numeric" autocomplete="off"
+                               aria-label="Loyer mensuel estimé en euros">
+                    </div>
+                    <p class="field-hint">Loyer nu ou charges comprises</p>
+                </div>
+
+                <div class="field">
+                    <label for="city">Ville <span style="font-weight:500;color:var(--g400)">(optionnel)</span></label>
+                    <div class="iw">
+                        <select id="city" aria-label="Choisir une ville">
+                            <option value="">Choisir une ville…</option>
+                            <option>Paris</option>
+                            <option>Marseille</option>
+                            <option>Lyon</option>
+                            <option>Toulouse</option>
+                            <option>Nice</option>
+                            <option>Nantes</option>
+                            <option>Montpellier</option>
+                            <option>Strasbourg</option>
+                            <option>Bordeaux</option>
+                            <option>Lille</option>
+                            <option>Rennes</option>
+                            <option>Reims</option>
+                            <option>Le Havre</option>
+                            <option>Cergy</option>
+                            <option>Saint-Étienne</option>
+                            <option>Toulon</option>
+                            <option>Grenoble</option>
+                            <option>Dijon</option>
+                            <option>Angers</option>
+                            <option>Nîmes</option>
+                        </select>
+                    </div>
+                    <p class="field-hint">Affiché sur votre résultat partagé — n'affecte pas le calcul</p>
+                </div>
+
+                <div class="notary-tip" aria-live="polite">
+                    <p>Frais de notaire calculés automatiquement
+                        <span>— 7,5 % si prix &gt; 100 000 €, sinon 8 %</span></p>
+                </div>
+
+            </div>
+
+            <!-- RESULTS -->
+            <div class="card-wrap fade">
+                <div class="rcard" id="rcard" role="region" aria-label="Résultats de l'analyse" aria-live="polite">
+
+                    <!-- empty state -->
+                    <div class="state-empty" id="st-empty">
+                        <svg class="state-empty-ico" width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+                            <rect x="4" y="4" width="40" height="40" rx="10" stroke="currentColor" stroke-width="2"/>
+                            <path d="M14 30l7-8 5 5 8-10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="14" cy="30" r="1.8" fill="currentColor"/>
+                            <circle cx="21" cy="22" r="1.8" fill="currentColor"/>
+                            <circle cx="26" cy="27" r="1.8" fill="currentColor"/>
+                            <circle cx="34" cy="17" r="1.8" fill="currentColor"/>
+                        </svg>
+                        <p class="state-empty-t">Votre verdict s'affiche ici</p>
+                        <p class="state-empty-s">Renseignez le prix et le loyer pour commencer.</p>
+                    </div>
+
+                    <!-- filled state -->
+                    <div id="st-filled" style="display:none">
+
+                        <!-- ── VERDICT — dominant element ── -->
+                        <div class="vblock" id="vblock" aria-label="Verdict">
+                            <p class="vlabel">Verdict</p>
+                            <div class="vmain">
+                                <span class="vico" id="v-ico" aria-hidden="true"></span>
+                                <span class="vtxt" id="v-txt"></span>
+                            </div>
+                            <p class="vsub" id="v-sub"></p>
+                        </div>
+
+                        <!-- ── METRICS ── -->
+                        <div class="metrics" role="list">
+                            <div class="met" role="listitem">
+                                <div class="met-v" id="m-gross">—</div>
+                                <div class="met-k">Rdt. brut</div>
+                            </div>
+                            <div class="met" role="listitem">
+                                <div class="met-v" id="m-net">—</div>
+                                <div class="met-k">Rdt. net</div>
+                            </div>
+                            <div class="met" role="listitem">
+                                <div class="met-v" id="m-cf">—</div>
+                                <div class="met-k">Cashflow/mois</div>
+                            </div>
+                        </div>
+
+                        <!-- ── SHARE — visible sans scroller ── -->
+                        <div class="share-zone">
+                            <button class="share-btn" id="share-btn" onclick="doShare()">
+                                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+                                    <circle cx="11.5" cy="3"   r="1.7" stroke="currentColor" stroke-width="1.4"/>
+                                    <circle cx="3.5"  cy="7.5" r="1.7" stroke="currentColor" stroke-width="1.4"/>
+                                    <circle cx="11.5" cy="12"  r="1.7" stroke="currentColor" stroke-width="1.4"/>
+                                    <path d="M5.1 8.4 10.2 11M10.2 4 5.1 6.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                                </svg>
+                                Partager mon résultat
+                            </button>
+                        </div>
+
+                        <!-- ── BREAKDOWN ── -->
+                        <div class="breakdown">
+                            <div class="brow">
+                                <span class="brow-k">Prix du bien</span>
+                                <span class="brow-v" id="b-price">—</span>
+                            </div>
+                            <div class="brow">
+                                <span class="brow-k">Frais de notaire</span>
+                                <span class="brow-v" id="b-notary">—</span>
+                            </div>
+                            <div class="brow">
+                                <span class="brow-k">Prix total</span>
+                                <span class="brow-v" id="b-total">—</span>
+                            </div>
+                            <div class="brow">
+                                <span class="brow-k">Loyer annuel brut</span>
+                                <span class="brow-v" id="b-annual">—</span>
+                            </div>
+                            <div class="brow">
+                                <span class="brow-k">Charges estimées (25 %)</span>
+                                <span class="brow-v" id="b-charges">—</span>
+                            </div>
+                            <div class="brow">
+                                <span class="brow-k">Mensualité crédit (3,5 % · 20 ans)</span>
+                                <span class="brow-v" id="b-credit">—</span>
+                            </div>
+                        </div>
+
+                    </div><!-- /st-filled -->
+
+                    <!-- GATE OVERLAY -->
+                    <div class="gate" id="gate">
+                        <div class="gate-ico">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="11" rx="3"/>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                            </svg>
+                        </div>
+                        <p class="gate-title">Analyse gratuite utilisée</p>
+                        <p class="gate-sub">Entrez votre email pour débloquer les analyses illimitées — c'est gratuit.</p>
+                        <form class="gate-form" onsubmit="unlockGate(event)">
+                            <input class="gate-inp" id="gate-email" type="email" placeholder="votre@email.com" required autocomplete="email">
+                            <button class="gate-submit" type="submit">Débloquer l'accès →</button>
+                        </form>
+                    </div>
+
+                </div><!-- /rcard -->
+            </div><!-- /card-wrap -->
+
+        </div><!-- /calc-grid -->
+    </div>
+</section>
+
+<!-- ─── EXAMPLES ─── -->
+<section class="sec">
+    <div class="wrap">
+        <p class="eyebrow fade">Exemples concrets</p>
+        <h2 class="sec-h2 fade">Même outil.<br>Des verdicts très différents.</h2>
+        <p class="sec-p fade">Le marché fait tout. VerdImmo vous dit la vérité en 30 secondes.</p>
+
+        <div class="ex-grid">
+
+            <!-- Card 1 — Saint-Étienne RENTABLE -->
+            <div class="ex-card fade">
+                <div class="ex-photo-wrap">
+                    <img src="https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&w=640&q=82"
+                         alt="Appartement Saint-Étienne" class="ex-photo" loading="lazy">
+                    <div class="ex-photo-overlay"></div>
+                    <div class="ex-badge g">
+                        <span class="ex-badge-dot g"></span>
+                        RENTABLE
+                    </div>
+                </div>
+                <div class="ex-body">
+                    <p class="ex-city">Saint-Étienne · Centre</p>
+                    <p class="ex-meta">T2 · 60 000 € · Loyer 420 €/mois</p>
+                    <div class="ex-stats">
+                        <div>
+                            <div class="ex-stat-v" data-count="7.78" data-suffix=" %" data-dec="2">—</div>
+                            <div class="ex-stat-k">Rdt. brut</div>
+                        </div>
+                        <div>
+                            <div class="ex-stat-v" data-count="5.83" data-suffix=" %" data-dec="2">—</div>
+                            <div class="ex-stat-k">Rdt. net</div>
+                        </div>
+                        <div>
+                            <div class="ex-stat-v pos" data-count="44" data-prefix="+" data-suffix=" €">—</div>
+                            <div class="ex-stat-k">Cashflow</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2 — Paris ÉVITER -->
+            <div class="ex-card fade">
+                <div class="ex-photo-wrap">
+                    <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&w=640&q=82"
+                         alt="Appartement Paris" class="ex-photo" loading="lazy">
+                    <div class="ex-photo-overlay"></div>
+                    <div class="ex-badge r">
+                        <span class="ex-badge-dot r"></span>
+                        ÉVITER
+                    </div>
+                </div>
+                <div class="ex-body">
+                    <p class="ex-city">Paris · 11ème</p>
+                    <p class="ex-meta">T2 · 420 000 € · Loyer 1 400 €/mois</p>
+                    <div class="ex-stats">
+                        <div>
+                            <div class="ex-stat-v" data-count="3.72" data-suffix=" %" data-dec="2">—</div>
+                            <div class="ex-stat-k">Rdt. brut</div>
+                        </div>
+                        <div>
+                            <div class="ex-stat-v" data-count="2.79" data-suffix=" %" data-dec="2">—</div>
+                            <div class="ex-stat-k">Rdt. net</div>
+                        </div>
+                        <div>
+                            <div class="ex-stat-v neg" data-count="1218" data-prefix="−" data-suffix=" €">—</div>
+                            <div class="ex-stat-k">Cashflow</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ─── WHY ─── -->
+<section class="sec" id="why">
+    <div class="wrap">
+        <p class="eyebrow fade">Pourquoi VerdImmo ?</p>
+        <h2 class="sec-h2 fade">Pas de bullshit.<br>Juste les chiffres.</h2>
+
+        <div class="why-grid">
+            <div class="why-card fade">
+                <div class="why-ico" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="9"/>
+                        <path d="M11 6v5l3 3"/>
+                    </svg>
+                </div>
+                <h3 class="why-t">30 secondes</h3>
+                <p class="why-desc">Le résultat s'affiche pendant que vous tapez. Pas de bouton, pas d'attente, pas d'inscription.</p>
+            </div>
+            <div class="why-card fade">
+                <div class="why-ico" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M11 2C7.69 2 5 4.69 5 8c0 4.5 6 12 6 12s6-7.5 6-12c0-3.31-2.69-6-6-6z"/>
+                        <circle cx="11" cy="8" r="2"/>
+                    </svg>
+                </div>
+                <h3 class="why-t">Spécifique France</h3>
+                <p class="why-desc">Frais de notaire réels, charges locatives françaises et simulation crédit 20 ans à 4 % — tout intégré.</p>
+            </div>
+            <div class="why-card fade">
+                <div class="why-ico" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="9"/>
+                        <path d="M7 11l3 3 5-5"/>
+                    </svg>
+                </div>
+                <h3 class="why-t">Gratuit</h3>
+                <p class="why-desc">Aucune inscription pour le calcul de base. La version complète — simulation fiscale, multi-biens — arrive bientôt.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── WAITLIST ─── -->
+<section class="sec sec-dk" id="waitlist">
+
+    <div class="wl-proof fade">
+        <div class="wl-avatars" aria-hidden="true">
+            <div class="wl-av" style="background:#6d9de8">T</div>
+            <div class="wl-av" style="background:#e8a96d">M</div>
+            <div class="wl-av" style="background:#7ec8a0">S</div>
+            <div class="wl-av" style="background:#c87ea0">A</div>
+            <div class="wl-av" style="background:#a07ec8">R</div>
+        </div>
+        <span class="wl-proof-txt">142 investisseurs déjà inscrits</span>
+    </div>
+
+    <p class="eyebrow eyebrow-lt fade">Accès anticipé</p>
+    <h2 class="sec-h2 fade">Recevez la version<br>complète gratuitement</h2>
+    <p class="sec-p fade">Simulation fiscale, comparaison multi-biens,<br>projection sur 20 ans.</p>
+
+    <!-- V2 feature promises -->
+    <div class="wl-features fade">
+        <div class="wl-feat">
+            <div class="wl-feat-ico" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8 2l5 2v4c0 2.8-2.2 5-5 5.8C5.2 13 3 10.8 3 8V4z"/>
+                    <path d="M5.5 8l2 2 3-3"/>
+                </svg>
+            </div>
+            <div>
+                <p class="wl-feat-t">Pinel, LMNP, SCI, Denormandie</p>
+                <p class="wl-feat-d">On détecte le dispositif fiscal qui maximise votre gain net selon votre bien et votre tranche.</p>
+            </div>
+        </div>
+        <div class="wl-feat">
+            <div class="wl-feat-ico" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8 2v10M5 12h6"/>
+                    <path d="M2 5l3-3 3 3M8 5l3-3 3 3"/>
+                    <path d="M2 5c0 1.7 1.3 2.8 3 2.8S8 6.7 8 5"/>
+                    <path d="M8 5c0 1.7 1.3 2.8 3 2.8S14 6.7 14 5"/>
+                </svg>
+            </div>
+            <div>
+                <p class="wl-feat-t">Comparez 3 biens côte à côte</p>
+                <p class="wl-feat-d">Collez 3 annonces SeLoger. On sort le meilleur en clair, chiffres à l'appui.</p>
+            </div>
+        </div>
+        <div class="wl-feat">
+            <div class="wl-feat-ico" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 12l4-4 3 2 5-6"/>
+                    <path d="M11 4h3v3"/>
+                </svg>
+            </div>
+            <div>
+                <p class="wl-feat-t">Projection sur 20 ans</p>
+                <p class="wl-feat-d">Capital remboursé, plus-value estimée, gain net après impôt — visualisé mois par mois.</p>
+            </div>
+        </div>
+        <div class="wl-feat">
+            <div class="wl-feat-ico" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V6z"/>
+                    <path d="M9 2v4h4"/>
+                    <path d="M5 9h6M5 11.5h4"/>
+                </svg>
+            </div>
+            <div>
+                <p class="wl-feat-t">Export PDF pour votre banquier</p>
+                <p class="wl-feat-d">Un rapport complet à imprimer ou envoyer — plus crédible qu'un Excel fait maison.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="wl-wrap" class="fade">
+        <form class="wl-form" onsubmit="submitWL(event)">
+            <input type="email" class="wl-inp" id="wl-email"
+                   placeholder="votre@email.com" required
+                   autocomplete="email"
+                   aria-label="Votre adresse email">
+            <button type="submit" class="wl-btn">Je veux accès →</button>
+        </form>
+    </div>
+
+    <div class="wl-ok" id="wl-ok" role="alert">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="flex-shrink:0" aria-hidden="true"><circle cx="9" cy="9" r="8" stroke="#4ade80" stroke-width="1.5"/><path d="M5.5 9l3 3 4-4.5" stroke="#4ade80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Vous êtes sur la liste ! On vous prévient dès le lancement.
+    </div>
+
+    <div class="wl-perks fade" aria-label="Engagements">
+        <span class="wl-perk">✓ Aucun spam</span>
+        <span class="wl-perk">✓ Désabonnement en un clic</span>
+        <span class="wl-perk">✓ Accès bêta en priorité</span>
+    </div>
+
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer class="foot">
+    <span class="foot-logo">Verd<b>Immo</b></span>
+    <span class="foot-copy">© 2026 — Fait avec ❤️ en France · Outil de simulation, pas de conseil financier.</span>
+</footer>
+
+<!-- ─── SHARE MODAL ─── -->
+<div class="smodal" id="smodal" onclick="if(event.target===this)closeModal()">
+    <div class="smodal-box">
+        <div class="smodal-head">
+            <span class="smodal-title">Partager mon résultat</span>
+            <button class="smodal-close" onclick="closeModal()" aria-label="Fermer">✕</button>
+        </div>
+        <canvas id="share-canvas"></canvas>
+        <p class="smodal-hint">Appuyez longuement sur la carte pour l'enregistrer</p>
+        <div class="smodal-actions">
+            <button class="smodal-btn dl" onclick="downloadCard()">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 2v8M4 7l3.5 3.5L11 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M2 13h11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                Télécharger
+            </button>
+            <button class="smodal-btn native" onclick="shareNative()">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="11.5" cy="3" r="1.7" stroke="currentColor" stroke-width="1.4"/><circle cx="3.5" cy="7.5" r="1.7" stroke="currentColor" stroke-width="1.4"/><circle cx="11.5" cy="12" r="1.7" stroke="currentColor" stroke-width="1.4"/><path d="M5.1 8.3 10.2 11M10.2 4 5.1 6.7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                Partager
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ── Counter animation (examples section) ──
+    function runCounter(el, delay) {
+        const target   = parseFloat(el.dataset.count);
+        const prefix   = el.dataset.prefix  || '';
+        const suffix   = el.dataset.suffix  || '';
+        const decimals = parseInt(el.dataset.dec || '0');
+        const duration = 1300;
+
+        setTimeout(() => {
+            const t0 = performance.now();
+            const tick = (now) => {
+                const p = Math.min((now - t0) / duration, 1);
+                const eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
+                const val = (target * eased).toFixed(decimals).replace('.', ',');
+                el.textContent = prefix + val + suffix;
+                if (p < 1) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+        }, delay);
+    }
+
+    const exGrid = document.querySelector('.ex-grid');
+    if (exGrid) {
+        new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                let delay = 0;
+                entry.target.querySelectorAll('.ex-card').forEach(card => {
+                    card.querySelectorAll('[data-count]').forEach(el => {
+                        runCounter(el, delay);
+                        delay += 180; // stagger within card
+                    });
+                    delay += 260; // gap between cards
+                });
+                obs.unobserve(entry.target);
+            });
+        }, { threshold: 0.35 }).observe(exGrid);
+    }
+
+    // ── Nav shadow ──
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('up', scrollY > 12), { passive: true });
+
+    // ── Scroll reveal ──
+    const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (!e.isIntersecting) return;
+            const peers = [...e.target.parentElement.querySelectorAll('.fade:not(.in)')];
+            const i = peers.indexOf(e.target);
+            e.target.style.transitionDelay = Math.max(0, i) * 0.08 + 's';
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -32px 0px' });
+    document.querySelectorAll('.fade').forEach(el => io.observe(el));
+
+    // ── Formatters ──
+    const eur = n => new Intl.NumberFormat('fr-FR', {
+        style: 'currency', currency: 'EUR', maximumFractionDigits: 0
+    }).format(n);
+    const pct = n => n.toFixed(2) + ' %';
+
+    // ── Shared state for share button ──
+    let snap = null;
+
+    // ── Gate — 1 simulation gratuite ──
+    // La simulation est comptée comme "utilisée" après 800ms sans frappe
+    // pour éviter de gater pendant la saisie (ex: taper "800" keystroke par keystroke)
+    let simulationDone = false;
+    let settleTimer = null;
+    const SETTLE_DELAY = 800;
+
+    function showGate() {
+        document.getElementById('gate').classList.add('show');
+        document.getElementById('rcard').classList.add('gated');
+    }
+    function hideGate() {
+        document.getElementById('gate').classList.remove('show');
+        document.getElementById('rcard').classList.remove('gated');
+    }
+    async function unlockGate(e) {
+        e.preventDefault();
+        const email = document.getElementById('gate-email').value.trim();
+        if (!email) return;
+        const btn = e.target.querySelector('.gate-submit');
+        btn.textContent = '...'; btn.disabled = true;
+        try {
+            await fetch('/api/waitlist', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+        } catch (_) {}
+        hideGate();
+        simulationDone = false;
+        localStorage.setItem('rc_unlocked', '1');
+        run();
+    }
+
+    // ── Calculator ──
+    function run() {
+        const price = parseFloat(document.getElementById('price').value) || 0;
+        const rent  = parseFloat(document.getElementById('rent').value)  || 0;
+        const city  = document.getElementById('city').value;
+
+        if (!price || !rent) {
+            document.getElementById('st-empty').style.display  = '';
+            document.getElementById('st-filled').style.display = 'none';
+            snap = null;
+            return;
+        }
+
+        // ── Formulas ──
+        const notaryRate  = price < 100_000 ? 0.08 : 0.075;
+        const notaryFees  = price * notaryRate;
+        const total       = price + notaryFees;
+        const annualRent  = rent * 12;
+        const grossYield  = (annualRent / total) * 100;
+        const charges     = annualRent * 0.25;
+        const netYield    = ((annualRent - charges) / total) * 100;
+        const r = 0.035 / 12;
+        const n = 240;
+        const loanMonthly = total * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+        const cashflow    = rent - loanMonthly;
+
+        // ── Verdict ──
+        let cls, ico, txt, sub;
+        if (grossYield >= 6) {
+            cls = 'g'; ico = '🟢'; txt = 'RENTABLE';
+            sub = `Rendement brut ${pct(grossYield)} — bien au-dessus du seuil de 6 %`;
+        } else if (grossYield >= 4) {
+            cls = 'o'; ico = '🟡'; txt = 'LIMITE';
+            sub = `Rendement brut ${pct(grossYield)} — entre 4 % et 6 %, à négocier`;
+        } else {
+            cls = 'r'; ico = '🔴'; txt = 'ÉVITER';
+            sub = `Rendement brut ${pct(grossYield)} — en dessous de 4 %`;
+        }
+
+        // Write verdict
+        const vb = document.getElementById('vblock');
+        vb.className = 'vblock ' + cls;
+        document.getElementById('v-ico').textContent = ico;
+        document.getElementById('v-txt').textContent = txt;
+        document.getElementById('v-sub').textContent = sub;
+
+        // Write metrics
+        document.getElementById('m-gross').textContent  = pct(grossYield);
+        document.getElementById('m-gross').className    = 'met-v';
+        document.getElementById('m-net').textContent    = pct(netYield);
+        document.getElementById('m-net').className      = 'met-v';
+        const cfEl = document.getElementById('m-cf');
+        cfEl.textContent = (cashflow >= 0 ? '+' : '') + eur(cashflow);
+        cfEl.className   = 'met-v ' + (cashflow >= 0 ? 'pos' : 'neg');
+
+        // Write breakdown
+        document.getElementById('b-price').textContent   = eur(price);
+        document.getElementById('b-notary').textContent  = eur(notaryFees) + ` (${notaryRate * 100} %)`;
+        document.getElementById('b-total').textContent   = eur(total);
+        document.getElementById('b-annual').textContent  = eur(annualRent);
+        document.getElementById('b-charges').textContent = '– ' + eur(charges);
+        document.getElementById('b-credit').textContent  = '– ' + eur(loanMonthly);
+
+        // Show filled state
+        document.getElementById('st-empty').style.display  = 'none';
+        document.getElementById('st-filled').style.display = '';
+
+        // Save for share
+        snap = { price, rent, city, grossYield, netYield, cashflow, ico, txt };
+    }
+
+    ['price', 'rent'].forEach(id =>
+        document.getElementById(id).addEventListener('input', () => {
+            if (simulationDone && !localStorage.getItem('rc_unlocked')) {
+                showGate();
+                return;
+            }
+            run();
+            if (snap && !localStorage.getItem('rc_unlocked')) {
+                clearTimeout(settleTimer);
+                settleTimer = setTimeout(() => { simulationDone = true; }, SETTLE_DELAY);
+            }
+        })
+    );
+
+    // Ville = cosmétique uniquement, pas de logique de gate
+    document.getElementById('city').addEventListener('input', () => { run(); });
+
+    // ── Share modal ──
+    function doShare() {
+        if (!snap) return;
+        document.getElementById('smodal').classList.add('open');
+        document.body.style.overflow = 'hidden';
+        setTimeout(renderCard, 60);
+    }
+
+    function closeModal() {
+        document.getElementById('smodal').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // ── Canvas card ──
+    function rrect(ctx, x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+        ctx.lineTo(x + w, y + h - r);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        ctx.lineTo(x + r, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.closePath();
+    }
+
+    function renderCard(qrImg) {
+        const { price, rent, city, grossYield, netYield, cashflow, ico, txt } = snap;
+        const canvas = document.getElementById('share-canvas');
+        const W = 800, H = 1000;
+        canvas.width = W; canvas.height = H;
+        const ctx = canvas.getContext('2d');
+
+        // Background
+        const bg = ctx.createLinearGradient(0, 0, W, H);
+        bg.addColorStop(0, '#0d1a10');
+        bg.addColorStop(1, '#080808');
+        ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+
+        // Top accent bar
+        ctx.fillStyle = '#1a6b3c'; ctx.fillRect(0, 0, W, 5);
+
+        // Logo
+        ctx.font = '700 28px sans-serif';
+        ctx.fillStyle = 'rgba(255,255,255,.4)'; ctx.fillText('Verd', 60, 72);
+        const rw = ctx.measureText('Verd').width;
+        ctx.fillStyle = '#4ade80'; ctx.fillText('Immo', 60 + rw, 72);
+
+        // Verdict background
+        const vc = txt === 'RENTABLE'
+            ? { text: '#4ade80', bg: 'rgba(26,107,60,.22)', border: 'rgba(74,222,128,.35)' }
+            : txt === 'LIMITE'
+            ? { text: '#fbbf24', bg: 'rgba(146,64,14,.22)',  border: 'rgba(251,191,36,.35)' }
+            : { text: '#f87171', bg: 'rgba(153,27,27,.22)',   border: 'rgba(248,113,113,.35)' };
+
+        ctx.fillStyle = vc.bg;
+        rrect(ctx, 60, 110, W - 120, 210, 18);
+        ctx.fill();
+        ctx.strokeStyle = vc.border; ctx.lineWidth = 1.5; ctx.stroke();
+
+        // Verdict emoji + text
+        ctx.font = '72px serif';
+        ctx.fillText(ico, 88, 248);
+        ctx.fillStyle = vc.text;
+        ctx.font = '900 96px sans-serif';
+        ctx.fillText(txt, 178, 258);
+
+        // Verdict sub
+        ctx.fillStyle = 'rgba(255,255,255,.38)';
+        ctx.font = '400 22px sans-serif';
+        ctx.fillText(`Rendement brut ${pct(grossYield)}`, 88, 298);
+
+        // City
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '800 40px sans-serif';
+        ctx.fillText(city || 'France', 60, 390);
+
+        ctx.fillStyle = 'rgba(255,255,255,.38)';
+        ctx.font = '400 24px sans-serif';
+        ctx.fillText(`${eur(price)} · ${eur(rent)}/mois`, 60, 434);
+
+        // Divider
+        ctx.strokeStyle = 'rgba(255,255,255,.08)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(60, 474); ctx.lineTo(W - 60, 474); ctx.stroke();
+
+        // Metrics
+        const metrics = [
+            { label: 'Rdt. brut', value: pct(grossYield) },
+            { label: 'Rdt. net',  value: pct(netYield) },
+            { label: 'Cashflow',  value: (cashflow >= 0 ? '+' : '') + eur(cashflow) + '/mois' },
+        ];
+        const colW = (W - 120) / 3;
+        metrics.forEach((m, i) => {
+            const x = 60 + i * colW;
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '900 44px sans-serif';
+            ctx.fillText(m.value, x, 546);
+            ctx.fillStyle = 'rgba(255,255,255,.32)';
+            ctx.font = '600 18px sans-serif';
+            ctx.fillText(m.label.toUpperCase(), x, 578);
+        });
+
+        // Bottom divider
+        ctx.strokeStyle = 'rgba(255,255,255,.06)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(60, 624); ctx.lineTo(W - 60, 624); ctx.stroke();
+
+        // QR code
+        const qrSize = 160;
+        const qrX = W - 60 - qrSize, qrY = H - 60 - qrSize;
+        if (qrImg) {
+            ctx.fillStyle = '#e8f5ee';
+            rrect(ctx, qrX - 6, qrY - 6, qrSize + 12, qrSize + 12, 8);
+            ctx.fill();
+            ctx.drawImage(qrImg, qrX, qrY, qrSize, qrSize);
+        } else {
+            // Placeholder grid
+            ctx.fillStyle = 'rgba(255,255,255,.06)';
+            rrect(ctx, qrX, qrY, qrSize, qrSize, 8); ctx.fill();
+            ctx.fillStyle = 'rgba(255,255,255,.12)';
+            ctx.font = '600 13px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('QR CODE', qrX + qrSize / 2, qrY + qrSize / 2 + 5);
+            ctx.textAlign = 'left';
+        }
+
+        // URL + tagline
+        ctx.fillStyle = 'rgba(255,255,255,.5)';
+        ctx.font = '700 26px sans-serif';
+        ctx.fillText('verdimmo.fr', 60, H - 68);
+        ctx.fillStyle = 'rgba(255,255,255,.2)';
+        ctx.font = '400 18px sans-serif';
+        ctx.fillText('Calculateur de rentabilité locative · Gratuit', 60, H - 36);
+
+        // Load QR (async, redraw when ready)
+        if (!qrImg) {
+            const qr = new Image();
+            qr.crossOrigin = 'anonymous';
+            qr.onload = () => renderCard(qr);
+            qr.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&color=1a6b3c&bgcolor=e8f5ee&margin=4&data=${encodeURIComponent(window.location.href.split('?')[0])}`;
+        }
+    }
+
+    function downloadCard() {
+        const a = Object.assign(document.createElement('a'), {
+            download: 'verdimmo-resultat.png',
+            href: document.getElementById('share-canvas').toDataURL('image/png')
+        });
+        a.click();
+    }
+
+    async function shareNative() {
+        const canvas = document.getElementById('share-canvas');
+        try {
+            const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
+            const file = new File([blob], 'verdimmo-resultat.png', { type: 'image/png' });
+            if (navigator.canShare?.({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: `Mon bien est ${snap.txt} — VerdImmo`,
+                    text: `Rendement ${pct(snap.grossYield)} · Cashflow ${(snap.cashflow >= 0 ? '+' : '')}${eur(snap.cashflow)}/mois`
+                });
+            } else { downloadCard(); }
+        } catch { downloadCard(); }
+    }
+
+    // ── Waitlist ──
+    async function submitWL(e) {
+        e.preventDefault();
+        const email = document.getElementById('wl-email').value.trim();
+        if (!email) return;
+
+        const btn = e.target.querySelector('button[type=submit]');
+        btn.textContent = '...';
+        btn.disabled = true;
+
+        try {
+            const res = await fetch('/api/waitlist', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+
+            if (!res.ok) {
+                const err = await res.json();
+                // Email déjà inscrit
+                if (err?.error?.type === 'INVALID_VALUE_FOR_COLUMN') {
+                    document.getElementById('wl-wrap').style.display = 'none';
+                    document.getElementById('wl-ok').style.display   = 'flex';
+                } else {
+                    btn.textContent = 'Réessayer';
+                    btn.disabled = false;
+                }
+                return;
+            }
+        } catch {
+            btn.textContent = 'Réessayer';
+            btn.disabled = false;
+            return;
+        }
+
+        document.getElementById('wl-wrap').style.display = 'none';
+        document.getElementById('wl-ok').style.display   = 'flex';
+    }
+</script>
+</body>
+</html>
