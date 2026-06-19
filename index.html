@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VerdImmo — Rentable ou pas ? Réponse en 30 secondes.</title>
+    <link rel="icon" type="image/svg+xml" href="logo.svg">
     <script defer src="/_vercel/insights/script.js"></script>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -57,8 +58,9 @@
         }
         .nav.up { box-shadow: var(--sh); }
 
-        .logo { font-size: 17px; font-weight: 800; letter-spacing: -.5px; text-decoration: none; color: var(--black); }
-        .logo b { color: var(--accent); font-weight: 900; }
+        .logo { display: flex; align-items: center; gap: 9px; text-decoration: none; color: var(--black); }
+        .logo-text { font-size: 17px; font-weight: 800; letter-spacing: -.5px; }
+        .logo-text b { color: var(--accent); font-weight: 900; }
 
         .nav-pill {
             height: 34px; padding: 0 16px;
@@ -710,7 +712,13 @@
 
 <!-- NAV -->
 <nav class="nav" id="nav">
-    <a href="#" class="logo">Verd<b>Immo</b></a>
+    <a href="#" class="logo">
+        <svg width="36" height="28" viewBox="0 0 52 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M3 5L14 34L20 19L26 34L37 5" stroke="#16a34a" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M42 5H50M46 5V34M42 34H50" stroke="#111827" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="logo-text">Verd<b>Immo</b></span>
+    </a>
     <a href="#waitlist" class="nav-pill">Accès anticipé</a>
 </nav>
 
