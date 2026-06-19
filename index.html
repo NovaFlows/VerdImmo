@@ -236,7 +236,9 @@
         .ex-badge-dot.g { background: var(--green); }
         .ex-badge-dot.r { background: var(--red); }
         .ex-badge.g { color: var(--green); }
+        .ex-badge.o { color: var(--orange); }
         .ex-badge.r { color: var(--red); }
+        .ex-badge-dot.o { background: var(--orange); }
 
         .ex-body { padding: 22px 22px 20px; }
         .ex-city { font-size: 17px; font-weight: 800; letter-spacing: -.4px; margin-bottom: 2px; }
@@ -246,6 +248,34 @@
         .ex-stat-v.pos { color: var(--green); }
         .ex-stat-v.neg { color: var(--red); }
         .ex-stat-k { font-size: 11px; font-weight: 700; color: var(--g400); text-transform: uppercase; letter-spacing: .4px; }
+
+        /* ─── CAROUSEL ─── */
+        .carousel-wrap { margin-top: 52px; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .carousel { overflow: hidden; border-radius: var(--r); }
+        .car-track { display: flex; transition: transform .45s cubic-bezier(.4,0,.2,1); will-change: transform; }
+        .car-track .ex-card { min-width: 100%; flex-shrink: 0; }
+
+        .car-nav {
+            display: flex; align-items: center; justify-content: center;
+            gap: 16px; margin-top: 16px;
+        }
+        .car-arrow {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: var(--white); border: 2px solid var(--g200);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--g700); flex-shrink: 0;
+            transition: border-color .18s, color .18s, transform .15s;
+        }
+        .car-arrow:hover { border-color: var(--black); color: var(--black); transform: scale(1.08); }
+        .car-arrow:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+        .car-dots { display: flex; align-items: center; gap: 7px; }
+        .car-dot {
+            width: 7px; height: 7px; border-radius: 50%; padding: 0;
+            background: var(--g200); border: none; cursor: pointer;
+            transition: background .2s, transform .2s;
+        }
+        .car-dot.active { background: var(--black); transform: scale(1.4); }
 
         /* hero responsive */
         @media (max-width: 860px) {
@@ -935,70 +965,118 @@
         <h2 class="sec-h2 fade">Même outil.<br>Des verdicts très différents.</h2>
         <p class="sec-p fade">Le marché fait tout. VerdImmo vous dit la vérité en 30 secondes.</p>
 
-        <div class="ex-grid">
+        <div class="carousel-wrap fade">
+            <div class="carousel">
+                <div class="car-track" id="car-track">
 
-            <!-- Card 1 — Saint-Étienne RENTABLE -->
-            <div class="ex-card fade">
-                <div class="ex-photo-wrap">
-                    <img src="https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&w=640&q=82"
-                         alt="Appartement Saint-Étienne" class="ex-photo" loading="lazy">
-                    <div class="ex-photo-overlay"></div>
-                    <div class="ex-badge g">
-                        <span class="ex-badge-dot g"></span>
-                        RENTABLE
-                    </div>
-                </div>
-                <div class="ex-body">
-                    <p class="ex-city">Saint-Étienne · Centre</p>
-                    <p class="ex-meta">T2 · 60 000 € · Loyer 420 €/mois</p>
-                    <div class="ex-stats">
-                        <div>
-                            <div class="ex-stat-v" data-count="7.78" data-suffix=" %" data-dec="2">—</div>
-                            <div class="ex-stat-k">Rdt. brut</div>
+                    <!-- 1 — Saint-Étienne RENTABLE · 60k · 420€ · +44€ -->
+                    <div class="ex-card">
+                        <div class="ex-photo-wrap">
+                            <img src="https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&w=640&q=82" alt="Appartement Saint-Étienne" class="ex-photo" loading="lazy">
+                            <div class="ex-photo-overlay"></div>
+                            <div class="ex-badge g"><span class="ex-badge-dot g"></span>RENTABLE</div>
                         </div>
-                        <div>
-                            <div class="ex-stat-v" data-count="5.83" data-suffix=" %" data-dec="2">—</div>
-                            <div class="ex-stat-k">Rdt. net</div>
-                        </div>
-                        <div>
-                            <div class="ex-stat-v pos" data-count="44" data-prefix="+" data-suffix=" €">—</div>
-                            <div class="ex-stat-k">Cashflow</div>
+                        <div class="ex-body">
+                            <p class="ex-city">Saint-Étienne · Centre</p>
+                            <p class="ex-meta">T2 · 60 000 € · Loyer 420 €/mois</p>
+                            <div class="ex-stats">
+                                <div><div class="ex-stat-v" data-count="7.78" data-suffix=" %" data-dec="2">—</div><div class="ex-stat-k">Rdt. brut</div></div>
+                                <div><div class="ex-stat-v" data-count="5.83" data-suffix=" %" data-dec="2">—</div><div class="ex-stat-k">Rdt. net</div></div>
+                                <div><div class="ex-stat-v pos" data-count="44" data-prefix="+" data-suffix=" €">—</div><div class="ex-stat-k">Cashflow</div></div>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- 2 — Strasbourg LIMITE · 175k · 820€ · -271€ -->
+                    <div class="ex-card">
+                        <div class="ex-photo-wrap">
+                            <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&w=640&q=82" alt="Appartement Strasbourg" class="ex-photo" loading="lazy">
+                            <div class="ex-photo-overlay"></div>
+                            <div class="ex-badge o"><span class="ex-badge-dot o"></span>LIMITE</div>
+                        </div>
+                        <div class="ex-body">
+                            <p class="ex-city">Strasbourg · Centre</p>
+                            <p class="ex-meta">T2 · 175 000 € · Loyer 820 €/mois</p>
+                            <div class="ex-stats">
+                                <div><div class="ex-stat-v" data-count="5.23" data-suffix=" %" data-dec="2">—</div><div class="ex-stat-k">Rdt. brut</div></div>
+                                <div><div class="ex-stat-v" data-count="3.92" data-suffix=" %" data-dec="2">—</div><div class="ex-stat-k">Rdt. net</div></div>
+                                <div><div class="ex-stat-v neg" data-count="271" data-prefix="−" data-suffix=" €">—</div><div class="ex-stat-k">Cashflow</div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3 — Nantes LIMITE · 200k · 870€ · -377€ -->
+                    <div class="ex-card">
+                        <div class="ex-photo-wrap">
+                            <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&w=640&q=82" alt="Appartement Nantes" class="ex-photo" loading="lazy">
+                            <div class="ex-photo-overlay"></div>
+                            <div class="ex-badge o"><span class="ex-badge-dot o"></span>LIMITE</div>
+                        </div>
+                        <div class="ex-body">
+                            <p class="ex-city">Nantes · Île de Nantes</p>
+                            <p class="ex-meta">T2 · 200 000 € · Loyer 870 €/mois</p>
+                            <div class="ex-stats">
+                                <div><div class="ex-stat-v" data-count="4.86" data-suffix=" %" data-dec="2">—</div><div class="ex-stat-k">Rdt. brut</div></div>
+                                <div><div class="ex-stat-v" data-count="3.64" data-suffix=" %" data-dec="2">—</div><div class="ex-stat-k">Rdt. net</div></div>
+                                <div><div class="ex-stat-v neg" data-count="377" data-prefix="−" data-suffix=" €">—</div><div class="ex-stat-k">Cashflow</div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4 — Lyon ÉVITER · 270k · 950€ · -733€ -->
+                    <div class="ex-card">
+                        <div class="ex-photo-wrap">
+                            <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&w=640&q=82" alt="Appartement Lyon" class="ex-photo" loading="lazy">
+                            <div class="ex-photo-overlay"></div>
+                            <div class="ex-badge r"><span class="ex-badge-dot r"></span>ÉVITER</div>
+                        </div>
+                        <div class="ex-body">
+                            <p class="ex-city">Lyon · 6ème</p>
+                            <p class="ex-meta">T2 · 270 000 € · Loyer 950 €/mois</p>
+                            <div class="ex-stats">
+                                <div><div class="ex-stat-v" data-count="3.93" data-suffix=" %" data-dec="2">—</div><div class="ex-stat-k">Rdt. brut</div></div>
+                                <div><div class="ex-stat-v" data-count="2.95" data-suffix=" %" data-dec="2">—</div><div class="ex-stat-k">Rdt. net</div></div>
+                                <div><div class="ex-stat-v neg" data-count="733" data-prefix="−" data-suffix=" €">—</div><div class="ex-stat-k">Cashflow</div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5 — Paris ÉVITER · 420k · 1400€ · -1218€ -->
+                    <div class="ex-card">
+                        <div class="ex-photo-wrap">
+                            <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&w=640&q=82" alt="Appartement Paris" class="ex-photo" loading="lazy">
+                            <div class="ex-photo-overlay"></div>
+                            <div class="ex-badge r"><span class="ex-badge-dot r"></span>ÉVITER</div>
+                        </div>
+                        <div class="ex-body">
+                            <p class="ex-city">Paris · 11ème</p>
+                            <p class="ex-meta">T2 · 420 000 € · Loyer 1 400 €/mois</p>
+                            <div class="ex-stats">
+                                <div><div class="ex-stat-v" data-count="3.72" data-suffix=" %" data-dec="2">—</div><div class="ex-stat-k">Rdt. brut</div></div>
+                                <div><div class="ex-stat-v" data-count="2.79" data-suffix=" %" data-dec="2">—</div><div class="ex-stat-k">Rdt. net</div></div>
+                                <div><div class="ex-stat-v neg" data-count="1218" data-prefix="−" data-suffix=" €">—</div><div class="ex-stat-k">Cashflow</div></div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
-            <!-- Card 2 — Paris ÉVITER -->
-            <div class="ex-card fade">
-                <div class="ex-photo-wrap">
-                    <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&w=640&q=82"
-                         alt="Appartement Paris" class="ex-photo" loading="lazy">
-                    <div class="ex-photo-overlay"></div>
-                    <div class="ex-badge r">
-                        <span class="ex-badge-dot r"></span>
-                        ÉVITER
-                    </div>
+            <div class="car-nav">
+                <button class="car-arrow" id="car-prev" aria-label="Précédent">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2L4 7l5 5"/></svg>
+                </button>
+                <div class="car-dots">
+                    <button class="car-dot active" aria-label="Carte 1"></button>
+                    <button class="car-dot" aria-label="Carte 2"></button>
+                    <button class="car-dot" aria-label="Carte 3"></button>
+                    <button class="car-dot" aria-label="Carte 4"></button>
+                    <button class="car-dot" aria-label="Carte 5"></button>
                 </div>
-                <div class="ex-body">
-                    <p class="ex-city">Paris · 11ème</p>
-                    <p class="ex-meta">T2 · 420 000 € · Loyer 1 400 €/mois</p>
-                    <div class="ex-stats">
-                        <div>
-                            <div class="ex-stat-v" data-count="3.72" data-suffix=" %" data-dec="2">—</div>
-                            <div class="ex-stat-k">Rdt. brut</div>
-                        </div>
-                        <div>
-                            <div class="ex-stat-v" data-count="2.79" data-suffix=" %" data-dec="2">—</div>
-                            <div class="ex-stat-k">Rdt. net</div>
-                        </div>
-                        <div>
-                            <div class="ex-stat-v neg" data-count="1218" data-prefix="−" data-suffix=" €">—</div>
-                            <div class="ex-stat-k">Cashflow</div>
-                        </div>
-                    </div>
-                </div>
+                <button class="car-arrow" id="car-next" aria-label="Suivant">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2l5 5-5 5"/></svg>
+                </button>
             </div>
-
         </div>
     </div>
 </section>
@@ -1190,23 +1268,46 @@
         }, delay);
     }
 
-    const exGrid = document.querySelector('.ex-grid');
-    if (exGrid) {
-        new IntersectionObserver((entries, obs) => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
-                let delay = 0;
-                entry.target.querySelectorAll('.ex-card').forEach(card => {
-                    card.querySelectorAll('[data-count]').forEach(el => {
-                        runCounter(el, delay);
-                        delay += 180; // stagger within card
-                    });
-                    delay += 260; // gap between cards
-                });
-                obs.unobserve(entry.target);
+    // ── Carousel ──
+    const carTrack = document.getElementById('car-track');
+    const carCards = [...carTrack.children];
+    const carDotEls = [...document.querySelectorAll('.car-dot')];
+    const CAR_N = carCards.length;
+    let carIdx = 0;
+    let carTimer = null;
+    const carCountersDone = new Set();
+
+    function carGoTo(i) {
+        carIdx = ((i % CAR_N) + CAR_N) % CAR_N;
+        carTrack.style.transform = `translateX(-${carIdx * 100}%)`;
+        carDotEls.forEach((d, j) => d.classList.toggle('active', j === carIdx));
+        if (!carCountersDone.has(carIdx)) {
+            carCountersDone.add(carIdx);
+            let delay = 0;
+            carCards[carIdx].querySelectorAll('[data-count]').forEach(el => {
+                runCounter(el, delay); delay += 180;
             });
-        }, { threshold: 0.35 }).observe(exGrid);
+        }
     }
+    function carPlay()  { carTimer = setInterval(() => carGoTo(carIdx + 1), 4000); }
+    function carPause() { clearInterval(carTimer); }
+
+    document.getElementById('car-prev').addEventListener('click', () => { carPause(); carGoTo(carIdx - 1); carPlay(); });
+    document.getElementById('car-next').addEventListener('click', () => { carPause(); carGoTo(carIdx + 1); carPlay(); });
+    carDotEls.forEach((d, i) => d.addEventListener('click', () => { carPause(); carGoTo(i); carPlay(); }));
+
+    let carTouchX = 0;
+    carTrack.addEventListener('touchstart', e => { carTouchX = e.touches[0].clientX; carPause(); }, { passive: true });
+    carTrack.addEventListener('touchend',   e => { const dx = e.changedTouches[0].clientX - carTouchX; if (Math.abs(dx) > 50) carGoTo(carIdx + (dx < 0 ? 1 : -1)); carPlay(); }, { passive: true });
+    carTrack.addEventListener('mouseenter', carPause);
+    carTrack.addEventListener('mouseleave', carPlay);
+
+    // Démarre quand la section entre dans le viewport
+    new IntersectionObserver((entries, obs) => {
+        if (!entries[0].isIntersecting) return;
+        carGoTo(0); carPlay();
+        obs.disconnect();
+    }, { threshold: 0.3 }).observe(document.querySelector('.carousel-wrap'));
 
     // ── Nav shadow ──
     const nav = document.getElementById('nav');
